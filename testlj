@@ -1,0 +1,31 @@
+/tmp/start &
+for i in {1..6}
+do
+	echo ""
+	echo "Wait while the database is starting..."
+	sleep 10
+done
+
+JAVA_HOME=$ORACLE_HOME/jdk
+export JAVA_HOME
+PATH=$JAVA_HOME/bin:$PATH
+export PATH
+LD_LIBRARY_PATH=$JAVA_HOME/lib:$LD_LIBRARY_PATH
+export LD_LIBRARY_PATH
+
+echo ""
+date
+echo "Installing JVM in the database..."
+cd $ORACLE_HOME/javavm/install
+cp initjvm.sql initjvm-e.sql
+echo "exit" >> initjvm-e.sql
+su -s /bin/bash oracle -c "sqlplus / as sysdba @?/javavm/install/initjvm-e.sql > /tmp/initjvm.log"
+rm -f initjvm-e.sql
+date
+echo "... see /tmp/initjvm.log"
+
+cd /lj
+sqlplus system/manager @/lj/create_user.sql
+javac Hello.java
+loadjava -user lj/lj Hello.class
+sqlplus lj/lj @/lj/call_java.sql
