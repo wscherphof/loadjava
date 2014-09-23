@@ -9,8 +9,8 @@ Instal Docker
 
 Run
 ---
-`cd` to the `loadjava` repo dir
-`. .run.sh`
+1. `cd` to the `loadjava` repo dir
+1. `. ./run.sh`
 
 License
 -------
